@@ -1,0 +1,163 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// MenuItem class to represent an item on the menu
+class MenuItem {
+    private String name;
+    private double price;
+    
+    public MenuItem(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    @Override
+    public String toString() {
+        return name + " - ₹" + price;
+    }
+}
+
+// Order class to represent a customer's order
+class Order {
+    private List<MenuItem> items;
+    private double totalAmount;
+    
+    public Order() {
+        items = new ArrayList<>();
+        totalAmount = 0;
+    }
+    
+    public void addItem(MenuItem item) {
+        items.add(item);
+        totalAmount += item.getPrice();
+    }
+    
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder orderDetails = new StringBuilder("Order Details:\n");
+        for (MenuItem item : items) {
+            orderDetails.append(item.toString()).append("\n");
+        }
+        orderDetails.append("Total: ₹").append(totalAmount);
+        return orderDetails.toString();
+    }
+}
+
+// Table class to represent a table in the restaurant
+class Table {
+    private int tableNumber;
+    private boolean isReserved;
+    
+    public Table(int tableNumber) {
+        this.tableNumber = tableNumber;
+        this.isReserved = false;
+    }
+    
+    public int getTableNumber() {
+        return tableNumber;
+    }
+    
+    public boolean isReserved() {
+        return isReserved;
+    }
+    
+    public void reserve() {
+        isReserved = true;
+    }
+    
+    public void freeTable() {
+        isReserved = false;
+    }
+}
+
+// Restaurant class to manage restaurant operations
+class Restaurant {
+    private List<MenuItem> menu;
+    
+    public Restaurant() {
+        menu = new ArrayList<>();
+    }
+    
+    public void addMenuItem(MenuItem item) {
+        menu.add(item);
+    }
+    
+    public void showMenu(String category) {
+        System.out.println("Menu (" + category + "):");
+        for (MenuItem item : menu) {
+            if (item.getName().contains(category)) {
+                System.out.println(item);
+            }
+        }
+    }
+}
+
+// Main class to run the application
+public class Main {
+    public static void main(String[] args) {
+        Restaurant restaurant = new Restaurant();
+        Scanner scanner = new Scanner(System.in);
+        
+        // Adding Menu Items
+        restaurant.addMenuItem(new MenuItem("North Indian Veg Thali", 120.00));
+        restaurant.addMenuItem(new MenuItem("South Indian Veg Dosa", 80.00));
+        restaurant.addMenuItem(new MenuItem("South Indian Veg Idli", 60.00));
+        restaurant.addMenuItem(new MenuItem("Non-Veg Butter Chicken", 250.00));
+        restaurant.addMenuItem(new MenuItem("Non-Veg Fish Curry", 220.00));
+        
+        // Getting user input for Veg or Non-Veg
+        System.out.println("Please select the type of food:\n1. Veg\n2. Non-Veg");
+        int typeChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        String category;
+        
+        if (typeChoice == 1) {
+            // If Veg, ask for North Indian or South Indian
+            System.out.println("Please select the cuisine:\n1. North Indian\n2. South Indian");
+            int cuisineChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            
+            if (cuisineChoice == 1) {
+                // North Indian Veg
+                category = "North Indian Veg Thali";
+                System.out.println("You selected North Indian Veg. Showing available options:");
+                restaurant.showMenu(category);
+            } else {
+                // South Indian Veg
+                System.out.println("Please select a South Indian dish:\n1. Dosa\n2. Idli");
+                int southDishChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                
+                if (southDishChoice == 1) {
+                    category = "South Indian Veg Dosa";
+                } else {
+                    category = "South Indian Veg Idli";
+                }
+                
+                System.out.println("You selected South Indian Veg. Showing available options:");
+                restaurant.showMenu(category);
+            }
+        } else {
+            // Non-Veg
+            System.out.println("Showing Non-Veg menu:");
+            category = "Non-Veg";
+            restaurant.showMenu(category);
+        }
+        
+        scanner.close();
+    }
+}
